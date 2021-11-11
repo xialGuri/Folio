@@ -1,0 +1,17 @@
+* {
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 20px;
+}
+
+.background {
+    background-color: #47555e;
+    color: white;
+    min-height: 2000px;
+}
+
+.backgroundWhite {
+    background-color: white;
+    color: black;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
