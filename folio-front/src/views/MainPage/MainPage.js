@@ -6,13 +6,20 @@ import { BACK_ADDRESS } from "../../utils/BackAddress";
 import Header from "../../utils/Header";
 
 import styled from 'styled-components';
-import { Card, Button, Input } from 'antd';
+import { Card, Button, Input} from 'antd';
 import { EditOutlined } from '@ant-design/icons';
+
+// 추가
+import MainWritingModal from '../../modals/MainWritingModal'
+import MainModWritingModal from '../../modals/MainModWritingModal'
 
 const MainPage = ({ history }) => {
     const [followWriting, setFollowWriting] = useState([]);
     const [recommendPeople, setRecommendPeople] = useState([]);
     const { userData } = useSelector(state => state.user);
+    // 추가
+    const [MainWritingModalOn, setMainWritingModalOn] = useState(false);
+    const [MainModWritingModalOn, setMainModWritingModalOn] = useState(false);
 
     // 추천 사람 임시 데이터
     const people = [
@@ -80,19 +87,33 @@ const MainPage = ({ history }) => {
         )
     });
 
+    // 수정 버튼 추가
     const renderWriting = writings.map((writing, idx) => {
         return (
             <div style={{ marginBottom: '20px', backgroundColor: 'white', borderRadius: '0.5rem' }} key={idx}>
                 <div style={{ margin: '0 10px 0 10px' }}>
                     <div style={{ fontSize: '30px', float: 'left' }}>{writing.title}</div>
-                    <div style={{ float: 'right' }}>작성자: {writing.author}</div>
+                    <div style = {{ float: 'right' }}>
+                        {userData &&
+                            <Button style = {{marginTop:'5px',marginLeft:'9px'}} type='dashed' shape='round' size='middle' onClick={() => setMainModWritingModalOn(true)}>수정</Button>
+                        }
+                    </div>
+                    <div style={{ float: 'right', marginTop:'8px' }}>작성자: {writing.author}</div>
                 </div>
                 <br />
                 <br />
-                <div>{writing.content}</div>
+                <div style = {{display:'inline-block'}} > {writing.content} </div>
             </div>
         )
-    })
+    });
+
+    const onClickNewWriting = () => {
+        if (userData) {
+            setMainWritingModalOn(true);
+        } else {
+            alert('로그인해주세요!');
+        }
+    };
 
     const RecommendPeopleArea = styled.div`
         width: 20%;
@@ -118,6 +139,15 @@ const MainPage = ({ history }) => {
         border-radius: 10px;
     `;
 
+    const WritingAreaNoLogin = styled.div`
+        width: 90%;
+        align-items: center;
+        background-color: lightgray;
+        color: black;
+        margin: 50px 0 0 50px;
+        border-radius: 10px;
+    `;
+
     const WritingBox = styled.div`
         width: 90%;
         margin: 50px 0 50px 0;
@@ -125,29 +155,53 @@ const MainPage = ({ history }) => {
 
     return (
         <center className="background">
+            {/* 글쓰기, 수정 모달 추가 */}
+            <MainWritingModal show={MainWritingModalOn} onHide={() => setMainWritingModalOn(false)} />
+            <MainModWritingModal show={MainModWritingModalOn} onHide={() => setMainModWritingModalOn(false)} />
+
             {/* 고정 바 */}
             <Header style={{ margin: 'auto', width: '100%' }}></Header>
 
-            {/* 왼쪽 : 회원님을 위한 추천 */}
-            <RecommendPeopleArea>
-                <div style={{ marginTop: '30px' }}>회원님을 위한 추천</div>
-                <RecommendPeopleBox>
-                    {renderPeople}
-                </RecommendPeopleBox>
-            </RecommendPeopleArea>
-
-
+            {/* 수정 -> 로그인 여부에 따른 추천 화면 보여짐 */} 
+            {/* 로그인 기록이 있는 경우: 
+            왼쪽: 회원님을 위한 추천 보여짐 */}
+            {/* 수정 -> WritingArea style 추가 */} 
             {/* 오른쪽 : 글 관련 부분 */}
-            <WritingArea>
-                <WritingBox>
-                    {/* 위 : 글 올리기 부분 */}
-                    {/* 클릭 시 모달 실행 */}
-                    <Input size="large" placeholder="새로운 글 작성" prefix={<EditOutlined />} style={{ marginBottom: '50px' }} />
-
-                    {/* 밑 : 내가 팔로우한 사람의 글과 댓글 작성 부분 */}
-                    {renderWriting}
-                </WritingBox>
-            </WritingArea>
+            {userData &&
+                <div>
+                    <RecommendPeopleArea>
+                        <div style={{ marginTop: '30px' }}>회원님을 위한 추천</div>
+                        <RecommendPeopleBox>
+                            {renderPeople}
+                        </RecommendPeopleBox>
+                    </RecommendPeopleArea>
+                    <WritingArea>
+                        <WritingBox>
+                            {/* 위 : 글 올리기 부분 */}
+                            {/* 추가 -> 클릭 시 모달 실행, 로그인 여부에 따른 모달창 */}
+                            <Input size="large" placeholder="새로운 글 작성" prefix={<EditOutlined />} style={{ marginBottom: '50px' }} onClick={onClickNewWriting}/>
+                            
+                            {/* 밑 : 내가 팔로우한 사람의 글과 댓글 작성 부분 */}
+                            {renderWriting}
+                        </WritingBox>
+                    </WritingArea>
+                </div>
+            }
+            
+            {!userData &&
+                <WritingAreaNoLogin>
+                    <br />
+                    <WritingBox style={{ marginTop: '30px', marginBottom: '30px' }}>
+                        {/* 위 : 글 올리기 부분 */}
+                        {/* 추가 -> 클릭 시 모달 실행, 로그인 여부에 따른 모달창 */}
+                        <Input size="large" placeholder="새로운 글 작성" prefix={<EditOutlined />} style={{ marginBottom: '50px' }} onClick={onClickNewWriting}/>
+                        
+                        {/* 밑 : 내가 팔로우한 사람의 글과 댓글 작성 부분 */}
+                        {renderWriting}
+                    </WritingBox>
+                    <br />
+                </WritingAreaNoLogin>
+            }
         </center>
     );
 };

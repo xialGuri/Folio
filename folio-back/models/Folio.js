@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const folioSchema = mongoose.Schema({
     email: {
         type: String,
-        requried: true,
     },
     stacks: {
         type: Array,

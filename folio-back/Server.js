@@ -23,6 +23,7 @@ app.use(cookieParser());
 app.use('/api/main', require('./routes/main'));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/folio', require('./routes/folio'));
+app.use('/api/writing', require('./routes/writing'));
 
 const port = process.env.PORT || 5000;
 

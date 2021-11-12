@@ -127,7 +127,7 @@ const FolioWritingPage = ({ history }) => {
 
     const renderStacks = stacks.map((stack, idx) => {
         return (
-            <Button key={idx} style={{ height: '40px' }}>{stack}<a id={stack} onClick={removeStack}><CloseOutlined /></a></Button>
+            <Button key={idx} style={{ height: '40px' }}>{stack}<a id={stack} onClick={removeStack}>X</a></Button>
         );
     });
 
