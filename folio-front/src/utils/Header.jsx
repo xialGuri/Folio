@@ -28,14 +28,13 @@ const Header = () => {
             searchText: searchText,
         };
 
-        axios.post(BACK_ADDRESS + '/search', body)
+        axios.post(BACK_ADDRESS + '/main/search', body)
             .then(res => {
                 if (res.data.success) {
                     console.log('검색 성공');
-                    alert("검색 성공")
+                    console.log(res.data.userInfo);
                 } else {
-                    console.log('검색 실패');
-                    alert("검색 실패")
+                    alert("검색 실패");
                 }
             });
     };

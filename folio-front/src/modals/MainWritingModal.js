@@ -27,7 +27,7 @@ const MainWritingModal = ({ show, onHide }) => {
             date: new Date(),
         };
 
-        axios.post(BACK_ADDRESS + '/writing/new', body)
+        axios.post(BACK_ADDRESS + '/main/writing/new', body)
             .then (res => {
                 if (res.data.success) {
                     alert('글쓰기 성공')

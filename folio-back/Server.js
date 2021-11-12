@@ -20,10 +20,9 @@ app.use(bodyParser.json());
 app.use(cookieParser()); 
 
 // Connect to Routes
-app.use('/api/main', require('./routes/main'));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/folio', require('./routes/folio'));
-app.use('/api/writing', require('./routes/writing'));
+app.use('/api/main', require('./routes/main'));
 
 const port = process.env.PORT || 5000;
 

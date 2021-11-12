@@ -21,45 +21,19 @@ const MainPage = ({ history }) => {
     const [MainWritingModalOn, setMainWritingModalOn] = useState(false);
     const [MainModWritingModalOn, setMainModWritingModalOn] = useState(false);
 
-    // 추천 사람 임시 데이터
-    const people = [
-        {
-            name: '이아현',
-            stack: 'React, Node.js',
-        },
-        {
-            name: '나동현',
-            stack: 'React',
-        },
-    ];
-
-    // 게시글 임시 데이터
-    const writings = [
-        {
-            title: '게시글 1',
-            author: 'OOO',
-            content: '게시글 1의 내용',
-        },
-        {
-            title: '게시글 2',
-            author: 'XXX',
-            content: '게시글 2의 내용',
-        },
-    ]
-
     useEffect(() => {
         // 로그인 기록이 있는 경우, 팔로우한 사람들의 게시글 요청
-        if (userData !== null) {
-            // 1. 팔로우 목록의 글 불러오기
+        if (userData) {
             const body = {
                 email: userData.email,
             };
-
+            
+            // 1. 팔로우 목록의 글 불러오기
             axios.post(BACK_ADDRESS + '/main/writing', body)
                 .then(res => {
                     if (res.data.success) {
-                        console.log(res.data.writing);
-                        setFollowWriting(res.data.writing);
+                        console.log(res.data.writings);
+                        setFollowWriting(res.data.writings);
                     } else {
                         alert('글 불러오기 실패');
                     }
@@ -75,34 +49,42 @@ const MainPage = ({ history }) => {
                         alert('추천인 불러오기 실패');
                     }
                 });
+            
         }
     }, []);
 
-    const renderPeople = people.map((human, idx) => {
+    const renderPeople = recommendPeople.map((human, idx) => {
         return (
-            <Card style={{ width: '80%', marginTop: 16, borderRadius: '0.5rem' }} key={idx} title={human.name} size="small">
-                <div style={{ marginBottom: '10px' }}>{human.stack}</div>
-                <Button>Follow</Button>
+            <Card style={{ width: '80%', marginTop: 16, borderRadius: '0.5rem' }} key={idx} title={human.name} size="small" onClick={() => history.push('/folio/user?email='+human.email)}>
+                <div>{human.email}</div>
             </Card>
-        )
+        );
     });
 
-    // 수정 버튼 추가
-    const renderWriting = writings.map((writing, idx) => {
+    const renderWriting = followWriting.map((writing, idx) => {
         return (
             <div style={{ marginBottom: '20px', backgroundColor: 'white', borderRadius: '0.5rem' }} key={idx}>
                 <div style={{ margin: '0 10px 0 10px' }}>
-                    <div style={{ fontSize: '30px', float: 'left' }}>{writing.title}</div>
-                    <div style = {{ float: 'right' }}>
-                        {userData &&
-                            <Button style = {{marginTop:'5px',marginLeft:'9px'}} type='dashed' shape='round' size='middle' onClick={() => setMainModWritingModalOn(true)}>수정</Button>
+                    <div style={{ float: 'left' }}>{writing.email}</div>
+                    <div style={{ float: 'right' }}>
+                        {/* 내가 쓴 글일 때만 수정 버튼 나타남 */}
+                        {userData.email === writing.email &&
+                            <Button
+                                style={{ marginTop: '5px', marginLeft: '9px' }}
+                                type='dashed'
+                                shape='round'
+                                size='middle'
+                                onClick={() => setMainModWritingModalOn(true)}
+                            >수정</Button>
                         }
                     </div>
-                    <div style={{ float: 'right', marginTop:'8px' }}>작성자: {writing.author}</div>
                 </div>
                 <br />
                 <br />
-                <div style = {{display:'inline-block'}} > {writing.content} </div>
+                <div style={{ display:'inline-block' }}>{writing.text}</div>
+                <br />
+                <div style={{ float: 'right' }}>{writing.date}</div>
+                <br />
             </div>
         )
     });
