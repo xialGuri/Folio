@@ -11,9 +11,9 @@ import SignInModal from '../modals/SignInModal'
 const { Search } = Input;
 
 const Header = () => {
-    // 회원가입
+    // 회원가입(추가)
     const [signUpModalOn, setSignUpModalOn] = useState(false);
-    // 로그인
+    // 로그인(추가)
     const [signInModalOn, setSignInModalOn] = useState(false);
     const [searchText, setSearchText] = useState('');
     
@@ -32,10 +32,8 @@ const Header = () => {
             .then(res => {
                 if (res.data.success) {
                     console.log('검색 성공');
-                    alert("검색 성공")
                 } else {
                     console.log('검색 실패');
-                    alert("검색 실패")
                 }
             });
     };
@@ -64,7 +62,7 @@ const Header = () => {
 
     return (
         <>
-            {/* 로그인, 회원가입 */}
+            {/* sign up, in 부분(추가) */}
             <SignUpModal show = {signUpModalOn} onHide={()=>setSignUpModalOn(false)}/>
             <SignInModal show = {signInModalOn} onHide={()=>setSignInModalOn(false)}/>
 
@@ -88,6 +86,8 @@ const Header = () => {
 
             <br />
             <br />
+
+
             <center>
                 {/* 로고 */}
                 <Link to="/"><CodeOutlined style={logoStyle} /></Link>

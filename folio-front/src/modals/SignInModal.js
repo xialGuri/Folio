@@ -36,15 +36,13 @@ const SignInModal = ({ show, onHide, history }) => {
             email: email,
             password: password,
         };
-        //Back에서 만든 글쓰기 정보 가져오는 셋팅 필요
+
         axios.post(BACK_ADDRESS + '/user/login', body)
             .then (res => {
                 if (res.data.success) {
                     // 리덕스에 사용자 로그인 정보 저장
                     dispatch(loginAction({ email, password }));
-                    alert('로그인 성공')
                     // 모달 창 닫음
-                    onHide();
                     
                 } else {
                     alert('로그인 실패');
@@ -101,7 +99,8 @@ const SignInModal = ({ show, onHide, history }) => {
                                                 backgroundColor: "#176BEF", 
                                                 borderColor: "#176BEF",
                                                 width: '100%'
-                                            }}>
+                                            }}
+                                        >
                                             <i className="fab fa-google"></i>&nbsp; Sign In with Google
                                         </Button>
                                     );

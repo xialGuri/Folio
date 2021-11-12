@@ -87,9 +87,7 @@ const SignUpModal = ({ show, onHide }) => {
         axios.post(BACK_ADDRESS + '/user/signup', body)
             .then (res => {
                 if (res.data.success) {
-                    alert('회원가입 성공')
-                    // 모달 창 닫음
-                    onHide();
+                    // 성공 시 모달 창 닫음
 
                 } else {
                     alert('회원가입 실패');
