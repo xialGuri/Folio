@@ -3,12 +3,10 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 // import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
-
 import Header from "../../utils/Header";
 import { Input, Button, Table, Popconfirm, Modal } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
 import { BACK_ADDRESS } from "../../utils/BackAddress";
-
+import Footer from "../../utils/Footer";
 const FolioWritingPage = ({ history }) => {
     const [stacks, setStacks] = useState([]);
     const [intro, setIntro] = useState("");
@@ -45,25 +43,13 @@ const FolioWritingPage = ({ history }) => {
             title: '기간',
             dataIndex: '기간',
             key: '기간',
-        },
-        {
-            title: '',
-            dataIndex: '삭제',
-            key: '삭제',
-            render: (_, record) =>
-                workData.length > 0 ? (
-                    <Popconfirm title="삭제하시겠습니까?" onConfirm={() => updateWorkData(record.key)}>
-                        <a><CloseOutlined /></a>
-                    </Popconfirm>
-                ) : null,
-        },
+        }
     ];
 
     useEffect(() => {
         const body = {
             email: userData.email,
         };
-
         axios.post(BACK_ADDRESS + '/folio', body)
             .then(res => {
                 if (res.data.success) {
@@ -109,9 +95,9 @@ const FolioWritingPage = ({ history }) => {
 
     const stackEnterPressedFunction = () => {
         if (stacks.includes(stackTmp)) {
-            return alert('이미 추가되어 있는 기술스택입니다.');
+            return alert('이미 추가 되어 있는 기술 스택입니다.');
         }
-        setStacks([...stacks, stackTmp]);
+        setStacks([...stacks, stackTmp + ' ']);
         setStackTmp("");
     };
 
@@ -257,6 +243,7 @@ const FolioWritingPage = ({ history }) => {
                     <Button onClick={onClickResetButton}>초기화</Button>
                 </center>
                 <br />
+                <Footer></Footer>
             </form>
         </div>
     );

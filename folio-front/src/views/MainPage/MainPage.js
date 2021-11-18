@@ -4,11 +4,10 @@ import { useSelector } from "react-redux";
 
 import { BACK_ADDRESS } from "../../utils/BackAddress";
 import Header from "../../utils/Header";
-
+import Footer from "../../utils/Footer";
 import styled from 'styled-components';
 import { Card, Button, Input} from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-
 // 추가
 import MainWritingModal from '../../modals/MainWritingModal'
 import MainModWritingModal from '../../modals/MainModWritingModal'
@@ -184,6 +183,7 @@ const MainPage = ({ history }) => {
                     <br />
                 </WritingAreaNoLogin>
             }
+            <Footer></Footer>
         </center>
     );
 };

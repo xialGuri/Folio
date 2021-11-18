@@ -3,10 +3,11 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import { Input, Button } from "antd";
-import { CommentOutlined, UserOutlined, CodeOutlined } from '@ant-design/icons';
+import { CommentOutlined, UserOutlined, CodeOutlined, LoginOutlined, LogoutOutlined } from '@ant-design/icons';
 import { BACK_ADDRESS } from "./BackAddress";
 import SignUpModal from '../modals/SignUpModal'
 import SignInModal from '../modals/SignInModal'
+import { Card } from 'react-bootstrap';
 
 const { Search } = Input;
 
@@ -60,6 +61,12 @@ const Header = () => {
         color: 'white',
         flex: 1,
     }), []);
+    const LogStyle = useMemo(() => ({
+        marginTop: '20px',
+        marginLeft: 'auto',
+        backgroundColor: '#47555e',
+        color: 'white',
+    }),[])
 
     return (
         <>
@@ -67,24 +74,24 @@ const Header = () => {
             <SignUpModal show = {signUpModalOn} onHide={()=>setSignUpModalOn(false)}/>
             <SignInModal show = {signInModalOn} onHide={()=>setSignInModalOn(false)}/>
 
-            {/* 메시지, 마이페이지 버튼 */}
-
-            {/* 로그인 기록이 있는 경우, 메시지와 마이페이지로 가는 버튼이 제대로 동작 */}
+            {/* 로그인, 로그아웃, 메시지, 마이페이지 버튼 */}
+            {/* 로그인 기록이 있는 경우, 로그아웃 버튼 생성, 메시지와 마이페이지로 가는 버튼이 제대로 동작 */}
             {userData !== null &&
                 <div style={{ float: 'right' }}>
+                    <Card.Link href="/"><Button style={LogStyle}><LogoutOutlined /></Button></Card.Link>
                     <Link to="/message"><Button style={messageButtonStyle}><CommentOutlined /></Button></Link>
                     <Link to="/folio/me"><Button style={mypageButtonStyle}><UserOutlined /></Button></Link>
                 </div>
             }
 
-            {/* 로그인 기록이 없는 경우, 메시지와 마이페이지로 가는 버튼이 제대로 동작하지 않음 */}
+            {/* 로그인 기록이 없는 경우, 로그인 버튼 생성, 메시지와 마이페이지로 가는 버튼이 제대로 동작하지 않음 */}
             {userData === null &&
                 <div style={{ float: 'right' }}>
+                    <Button style={LogStyle} onClick = {() => setSignInModalOn(true)}><LoginOutlined /></Button>
                     <Button style={messageButtonStyle} onClick = {() => setSignInModalOn(true)}><CommentOutlined /></Button>
                     <Button style={mypageButtonStyle} onClick = {() => setSignInModalOn(true)}><UserOutlined /></Button>
                 </div>
             }
-
             <br />
             <br />
             <center>

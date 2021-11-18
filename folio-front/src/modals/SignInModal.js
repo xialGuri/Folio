@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, Link } from 'react'
 import { useDispatch } from 'react-redux'
 import { loginAction } from '../reducers/user'
 import { Modal, Button, Form, Container } from 'react-bootstrap'
@@ -36,18 +36,18 @@ const SignInModal = ({ show, onHide, history }) => {
             email: email,
             password: password,
         };
+        
         //Back에서 만든 글쓰기 정보 가져오는 셋팅 필요
         axios.post(BACK_ADDRESS + '/user/login', body)
             .then (res => {
                 if (res.data.success) {
                     // 리덕스에 사용자 로그인 정보 저장
                     dispatch(loginAction(res.data.user));
-                    alert('로그인 성공')
+                    alert('로그인 되었습니다')
                     // 모달 창 닫음
                     onHide();
-                    
                 } else {
-                    alert('로그인 실패');
+                    alert('로그인에 실패하였습니다');
                 }
             });
     };
@@ -87,7 +87,7 @@ const SignInModal = ({ show, onHide, history }) => {
                             <Button type="submit" variant = "info" className="my-3" style = {{width: "100%"}}>
                                 Sign In
                             </Button>
-                            <Button onClick={onClickSignUpButton}>
+                            <Button onClick={onClickSignUpButton} style = {{width: "100%", marginBottom:'10px'}}>
                                 Sign Up
                             </Button>
                             <HorizontalLine text={"OR"} /> 
