@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { BACK_ADDRESS } from "../../utils/BackAddress";
 import Header from "../../utils/Header";
 import Footer from "../../utils/Footer";
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav'
 import { VscAccount } from 'react-icons/vsc';
 
@@ -11,6 +12,7 @@ const UserPage = ({ history, match }) => {
     const userEmail = match.params.userEmail;
     const [userInfo, setUserInfo] = useState({});
     const [writings, setWritings] = useState([]);
+    const { userData } = useSelector(state => state.user);
 
     useEffect(() => {
         const body = {
@@ -40,6 +42,33 @@ const UserPage = ({ history, match }) => {
                 }
             });
     }, []);
+
+    const onClickFollowButton = () => {
+        if (!userData) {
+            return alert('로그인부터 해주세요.');
+        }
+
+        const body = {
+            myEmail: userData.email,
+            userEmail: userEmail,
+        };
+
+        axios.post(BACK_ADDRESS + '/user/follow', body)
+            .then(res => {
+                if (res.data.success) {
+                    // 팔로우를 할 경우
+                    if (res.data.new) {
+                        alert('팔로우');
+                    }
+                    // 팔로우 취소를 할 경우
+                    else {
+                        alert('팔로우 취소');
+                    }
+                } else {
+                    alert('팔로우 실패');
+                }
+            });
+    };
     
     const renderWriting = writings.map((writing, idx) => {
         return (
@@ -76,6 +105,7 @@ const UserPage = ({ history, match }) => {
                 <Card.Subtitle style = {{fontSize:'20px'}}className="mb-2 text-muted">
                     ({userEmail})
                 </Card.Subtitle>
+                <Button onClick={onClickFollowButton}>Follow</Button>
             </Card.Header>
             <Card.Body>
                 <Card.Title style={{fontWeight:'bold'}}>{userInfo.name}님의 게시글</Card.Title>

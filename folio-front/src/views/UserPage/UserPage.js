@@ -102,8 +102,8 @@ const UserPage = ({ history, match }) => {
                 } else {
                     alert('팔로우 실패');
                 }
-            })
-    }
+            });
+    };
 
     const renderStacks = stacks.map((stack, idx) => {
         return (
