@@ -4,6 +4,7 @@ import FolioWritingPage from './views/FolioWritingPage/FolioWritingPage';
 import MyPage from './views/UserPage/MyPage';
 import UserPage from './views/UserPage/UserPage';
 import FollowerWritingPage from './views/UserPage/UserPageWriting';
+import SearchPage from './views/SearchPage/SearchPage';
 import './App.css';
 import 'antd/dist/antd.css';
 import { Provider } from 'react-redux';
@@ -21,6 +22,7 @@ function App() {
             <Route path='/folio/me' exact component={MyPage} />
             <Route path='/folio/user/:userEmail' exact component={UserPage} />
             <Route path='/folio/user/writing/:userEmail' exact component={FollowerWritingPage} />
+            <Route path='/folio/search' exact component={SearchPage} />
           </Switch>
         </Router>
       </Provider>
