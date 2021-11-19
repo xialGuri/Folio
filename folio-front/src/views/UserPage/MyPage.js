@@ -17,6 +17,7 @@ const MyPage = ({ history }) => {
     const [intro, setIntro] = useState("");
     const [githubLink, setGithubLink] = useState("");
     const [workData, setWorkData] = useState([]);
+    const [followPeople, setFollowPeople] = useState([]);
     const { userData } = useSelector(state => state.user);
 
     useEffect(() => {
@@ -33,6 +34,17 @@ const MyPage = ({ history }) => {
                         setWorkData(folio.workData);
                         setIntro(folio.intro);
                         setGithubLink(folio.githubLink);
+                        // 내 팔로우 목록 가져오기
+                        axios.post(BACK_ADDRESS + '/user/follower', body)
+                            .then(res => {
+                                if (res.data.success) {
+                                    console.log('팔로워 목록 가져오기 성공');
+                                    console.log(res.data.people);
+                                    setFollowPeople(res.data.people);
+                                } else {
+                                    alert('팔로우 목록 가져오기 실패');
+                                }
+                            });
                     }
                 } else {
                     alert('내 포트폴리오 가져오기 실패');
@@ -63,10 +75,26 @@ const MyPage = ({ history }) => {
         }
     ];
 
+    const renderFollowers = followPeople.map((human, idx) => {
+        return (
+            <div>
+                <Card.Title style={{fontWeight:'bold', margin:'auto'}} key={idx}>
+                    <p style={{ marginBottom:'10px' ,fontSize: '20px', fontWeight: 'bold'}}>
+                        <VscAccount size='20'/> <Link to={'/folio/user/' + human.email}>{human.name}</Link>
+                    </p>
+                    <Card.Subtitle style = {{fontSize:'15px'}}className="mb-2 text-muted">
+                        ({human.email})
+                    </Card.Subtitle>
+                </Card.Title>
+                {idx !== followPeople.length - 1 && <br />}
+            </div>
+        );
+    });
+
     const renderStacks = stacks.map((stack, idx) => {
-            return (
-                <span key={idx}> {stack}</span>
-            );
+        return (
+            <span key={idx}> {stack}</span>
+        );
     });
 
     return (
@@ -88,23 +116,7 @@ const MyPage = ({ history }) => {
                     팔로워 목록
                 </Card.Header>
                 <Card.Body>
-                    <Card.Title style={{fontWeight:'bold', margin:'auto'}}>
-                        <p style={{ marginBottom:'10px' ,fontSize: '20px', fontWeight: 'bold'}}>
-                            <VscAccount size='20'/> <Link to='/folio/user#first'>이아현</Link>
-                        </p>
-                        <Card.Subtitle style = {{fontSize:'15px'}}className="mb-2 text-muted">
-                            (LAH@naver.com)
-                        </Card.Subtitle>
-                    </Card.Title>
-                    <br/>
-                    <Card.Title style={{fontWeight:'bold', margin:'auto'}}>
-                        <p style={{ marginBottom:'10px' ,fontSize: '20px', fontWeight: 'bold'}}>
-                            <VscAccount size='20'/> <Link to='/folio/user'> 이기창 </Link>
-                        </p>
-                        <Card.Subtitle style = {{fontSize:'15px'}}className="mb-2 text-muted">
-                            (LC@gmail.com)
-                        </Card.Subtitle>
-                    </Card.Title>
+                    {renderFollowers}
                 </Card.Body>
             </Card>
             <Card style={{ width: '50rem', marginTop: '0px', marginRight:'350px' }} text='black'>
