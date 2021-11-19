@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { BACK_ADDRESS } from "../../utils/BackAddress";
 import Header from "../../utils/Header";
 import Footer from "../../utils/Footer";
@@ -8,27 +7,41 @@ import { Card } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav'
 import { VscAccount } from 'react-icons/vsc';
 
-const UserPage = ({ history }) => {
-    const { userData } = useSelector(state => state.user);
-    const [followWriting, setFollowWriting] = useState([]);
+const UserPage = ({ history, match }) => {
+    const userEmail = match.params.userEmail;
+    const [userInfo, setUserInfo] = useState({});
+    const [writings, setWritings] = useState([]);
 
     useEffect(() => {
         const body = {
-            email: userData.email,
+            email: userEmail,
         };
 
-        axios.post(BACK_ADDRESS + '/main/writing', body)
-        .then(res => {
-            if (res.data.success) {
-                console.log(res.data.writings);
-                setFollowWriting(res.data.writings);
-            } else {
-                alert('글 불러오기 실패');
-            }
-        });
+        // 해당 사용자 검색
+        axios.post(BACK_ADDRESS + '/user/info', body)
+            .then(res => {
+                if (res.data.success) {
+                    console.log('사용자 정보 가져오기 성공');
+                    console.log(res.data.user);
+                    setUserInfo(res.data.user);
+                    // 해당 사용자 게시글 검색
+                    axios.post(BACK_ADDRESS + '/main/writing/user', body)
+                        .then(res => {
+                            if (res.data.success) {
+                                console.log('사용자 게시글 가져오기 성공');
+                                console.log(res.data.writings);
+                                setWritings(res.data.writings);
+                            } else {
+                                alert('사용자 게시글 가져오기 실패');
+                            }
+                        });
+                } else {
+                    alert('사용자 정보 가져오기 실패');
+                }
+            });
     }, []);
     
-    const renderWriting = followWriting.map((writing, idx) => {
+    const renderWriting = writings.map((writing, idx) => {
         return (
             <div style={{ marginBottom: '20px', backgroundColor: 'white', borderRadius: '0.5rem' }} key={idx}>
                 <br />
@@ -49,23 +62,23 @@ const UserPage = ({ history }) => {
             <Card.Header>
                 <Nav variant="tabs" defaultActiveKey="#first">
                 <Nav.Item>
-                    <Nav.Link href="#first" onClick={() => history.push('/folio/user')}>포트폴리오</Nav.Link>
+                    <Nav.Link href="#first" onClick={() => history.push('/folio/user/' + userEmail)}>포트폴리오</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link href="#second" onClick={() => history.push('/folio/user/writing')}>게시글</Nav.Link>
+                    <Nav.Link href="#second" onClick={() => history.push('/folio/user/writing/' + userEmail)}>게시글</Nav.Link>
                 </Nav.Item>
                 </Nav>
             </Card.Header>
             <Card.Header style={{marginBottom:'0px' }}>
                 <p style={{ marginBottom:'10px' ,fontSize: '25px', fontWeight: 'bold'}}>
-                    <VscAccount size='30'/> 이아현
+                    <VscAccount size='30'/> {userInfo.name}
                 </p>
                 <Card.Subtitle style = {{fontSize:'20px'}}className="mb-2 text-muted">
-                    (LAH@naver.com)
+                    ({userEmail})
                 </Card.Subtitle>
             </Card.Header>
             <Card.Body>
-                <Card.Title style={{fontWeight:'bold'}}>아현님의 게시글</Card.Title>
+                <Card.Title style={{fontWeight:'bold'}}>{userInfo.name}님의 게시글</Card.Title>
                 <Card.Text>
                 {renderWriting}
                 </Card.Text>
@@ -74,7 +87,7 @@ const UserPage = ({ history }) => {
             <Card style={{ width: '70rem', marginTop: '10px'}}>
                 <Card.Body>
                     <Card.Link onClick={() => history.push('/folio/me')}> My Page </Card.Link>
-                    <Card.Link onClick={() => history.push('/folio/me')}> Main </Card.Link>
+                    <Card.Link onClick={() => history.push('/')}> Main </Card.Link>
                 </Card.Body>
             </Card>
             <Footer/>

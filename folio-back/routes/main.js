@@ -51,6 +51,27 @@ router.post('/writing', (req, res) => {
     });
 });
 
+// 특정 사용자의 글만 찾기
+router.post('/writing/user', (req, res) => {
+    console.log(req.body.email);
+    const email = req.body.email;
+
+    Writing.find({ email: email }, (err, writings) => {
+        if (err) {
+            console.log(err);
+            return res.json({
+                success: false,
+                err,
+            });
+        }
+
+        return res.json({
+            success: true,
+            writings,
+        });
+    });
+});
+
 // 새 글 작성
 router.post('/writing/new', (req, res) => {
     const writing = new Writing(req.body);

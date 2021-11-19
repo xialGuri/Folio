@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import ReactMarkdown from 'react-markdown';
 import { BACK_ADDRESS } from "../../utils/BackAddress";
 import Header from "../../utils/Header";
 import Footer from "../../utils/Footer";
@@ -10,24 +10,46 @@ import Nav from 'react-bootstrap/Nav'
 import { VscAccount } from 'react-icons/vsc';
 import { Table } from "antd";
 
-const UserPage = ({ history }) => {
-    const { userData } = useSelector(state => state.user);
+const UserPage = ({ history, match }) => {
+    const userEmail = match.params.userEmail;
+    const [userInfo, setUserInfo] = useState({});
+    const [stacks, setStacks] = useState([]);
+    const [intro, setIntro] = useState("");
+    const [githubLink, setGithubLink] = useState("");
     const [workData, setWorkData] = useState([]);
+    const [writings, setWritings] = useState([]);
 
     useEffect(() => {
         const body = {
-            email: userData.email,
+            email: userEmail,
         };
-        axios.post(BACK_ADDRESS + '/folio', body)
+
+        // 해당 사용자 프로필 검색
+        axios.post(BACK_ADDRESS + '/user/info', body)
             .then(res => {
                 if (res.data.success) {
-                    if (res.data.folio) {
-                        console.log('내 포트폴리오 가져오기 성공');
-                        const folio = res.data.folio;
-                        setWorkData(folio.workData);
-                    }
+                    console.log('사용자 정보 가져오기 성공');
+                    console.log(res.data.user);
+                    setUserInfo(res.data.user);
+                    // 해당 사용자 포트폴리오 검색
+                    axios.post(BACK_ADDRESS + '/folio', body)
+                        .then(res => {
+                            if (res.data.success) {
+                                if (res.data.success) {
+                                    console.log('사용자 포트폴리오 가져오기 성공');
+                                    const folio = res.data.folio;
+                                    console.log(folio);
+                                    setStacks(folio.stacks);
+                                    setIntro(folio.intro);
+                                    setGithubLink(folio.githubLink);
+                                    setWorkData(folio.workData);
+                                }
+                            } else {
+                                alert('사용자 포트폴리오 가져오기 실패');
+                            }
+                        });
                 } else {
-                    alert('내 포트폴리오 가져오기 실패');
+                    alert('사용자 정보 가져오기 실패');
                 }
             });
     }, []);
@@ -54,6 +76,13 @@ const UserPage = ({ history }) => {
             key: '기간',
         }
     ];
+
+    const renderStacks = stacks.map((stack, idx) => {
+        return (
+            <span key={idx}> {stack}</span>
+        );
+    });
+
     return (
         <>
          <center className="background">
@@ -66,28 +95,28 @@ const UserPage = ({ history }) => {
                     <Nav.Link href="#first" onClick={() => history.push('/folio/user')}>포트폴리오</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link href="#second" onClick={() => history.push('/folio/user/writing')}>게시글</Nav.Link>
+                    <Nav.Link href="#second" onClick={() => history.push('/folio/user/writing/' + userEmail)}>게시글</Nav.Link>
                 </Nav.Item>
                 </Nav>
             </Card.Header>
             <Card.Header style={{marginBottom:'0px' }}>
                 <p style={{ marginBottom:'10px' ,fontSize: '25px', fontWeight: 'bold'}}>
-                    <VscAccount size='30'/> 이아현
+                    <VscAccount size='30'/> {userInfo.name}
                 </p>
                 <Card.Subtitle style = {{fontSize:'20px'}}className="mb-2 text-muted">
-                    (LAH@naver.com)
+                    ({userEmail})
                 </Card.Subtitle>
             </Card.Header>
             <Card.Body>
-                <Card.Title style={{fontWeight:'bold'}}>아현님의 소개</Card.Title>
+                <Card.Title style={{fontWeight:'bold'}}>{userInfo.name}님의 소개</Card.Title>
                 <Card.Text>
-                    안녕하세요!
+                    <ReactMarkdown children={intro} />
                 </Card.Text>
             </Card.Body>
             <Card.Body>
                 <Card.Title style={{fontWeight:'bold'}}>기술/스택</Card.Title>
                 <Card.Text>
-                    Node.js, Android Studio, React, Java, Python
+                    {renderStacks}
                 </Card.Text>
             </Card.Body>
             <Card.Body>
@@ -96,8 +125,8 @@ const UserPage = ({ history }) => {
             </Card.Body>
             <Card.Body>
                 <Card.Title style={{fontWeight:'bold'}}>깃 허브</Card.Title>
-                <a target="_blank" href='https://github.com/LAH1203'>Go to GitHub</a>
-                <Link to = 'https://github.com/LAH1203'/>
+                <a target="_blank" href={githubLink}>Go to GitHub</a>
+                <Link to = {githubLink}/>
                 <br/>
                 <br/>
             </Card.Body>
@@ -106,7 +135,7 @@ const UserPage = ({ history }) => {
             <Card style={{ width: '70rem', marginTop: '10px'}}>
                 <Card.Body>
                     <Card.Link onClick={() => history.push('/folio/me')}> My Page </Card.Link>
-                    <Card.Link onClick={() => history.push('/folio/me')}> Main </Card.Link>
+                    <Card.Link onClick={() => history.push('/')}> Main </Card.Link>
                 </Card.Body>
             </Card>
             <Footer/>
