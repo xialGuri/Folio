@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { User } = require('../models/User');
+const { Follow } = require('../models/Follow');
 
 // Login
 router.post('/login', (req, res) => {
@@ -95,6 +96,58 @@ router.post('/info', (req, res) => {
             success: true,
             user: user,
         });
+    });
+});
+
+// 사용자 팔로우
+router.post('/follow', (req, res) => {
+    const { myEmail, userEmail } = req.body;
+
+    // 만약 내 이메일과 사용자 이메일의 관계가 이미 있을 경우에는 해당 항목을 삭제하여 팔로우 취소 기능으로 사용함
+    Follow.findOne({ myEmail: myEmail, userEmail: userEmail }, (err, info) => {
+        if (err) {
+            console.log(err);
+            return res.json({
+                success: false,
+                err,
+            });
+        }
+
+        // 없을 경우에는 새로 추가
+        if (!info) {
+            console.log('팔로우');
+            const follow = new Follow(req.body);
+            follow.save((err, doc) => {
+                if (err) {
+                    console.log(err);
+                    return res.json({
+                        success: false,
+                        err,
+                    });
+                }
+            });
+            return res.json({
+                success: true,
+                new: true,
+            });
+        }
+        // 있을 경우에는 삭제
+        else {
+            console.log('팔로우 취소');
+            Follow.deleteOne({ myEmail: myEmail, userEmail: userEmail }, (err, doc) => {
+                if (err) {
+                    console.log(err);
+                    return res.json({
+                        success: false,
+                        err,
+                    });
+                }
+            });
+            return res.json({
+                success: true,
+                new: false,
+            });
+        }
     });
 });
 
