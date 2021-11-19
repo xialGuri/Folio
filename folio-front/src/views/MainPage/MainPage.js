@@ -48,7 +48,6 @@ const MainPage = ({ history }) => {
                         alert('추천인 불러오기 실패');
                     }
                 });
-            
         }
     }, []);
 
