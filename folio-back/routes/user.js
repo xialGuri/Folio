@@ -78,4 +78,24 @@ router.post('/signup', (req, res) => {
     
 });
 
+// find user info
+router.post('/info', (req, res) => {
+    const { email } = req.body;
+
+    User.findOne({ email: email }, (err, user) => {
+        if (err) {
+            console.log(err);
+            return res.json({
+                success: false,
+                err,
+            });
+        }
+
+        return res.json({
+            success: true,
+            user: user,
+        });
+    });
+});
+
 module.exports = router;

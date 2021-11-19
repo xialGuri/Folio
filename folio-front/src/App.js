@@ -19,8 +19,8 @@ function App() {
             <Route path='/' exact component={MainPage} />
             <Route path='/folio/writing' exact component={FolioWritingPage} />
             <Route path='/folio/me' exact component={MyPage} />
-            <Route path='/folio/user' exact component={UserPage} />
-            <Route path='/folio/user/writing' exact component={FollowerWritingPage} />
+            <Route path='/folio/user/:userEmail' exact component={UserPage} />
+            <Route path='/folio/user/writing/:userEmail' exact component={FollowerWritingPage} />
           </Switch>
         </Router>
       </Provider>

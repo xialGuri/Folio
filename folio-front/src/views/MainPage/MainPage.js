@@ -54,7 +54,7 @@ const MainPage = ({ history }) => {
 
     const renderPeople = recommendPeople.map((human, idx) => {
         return (
-            <Card style={{ width: '80%', marginTop: 16, borderRadius: '0.5rem' }} key={idx} title={human.name} size="small" onClick={() => history.push('/folio/user?email='+human.email)}>
+            <Card style={{ width: '80%', marginTop: 16, borderRadius: '0.5rem' }} key={idx} title={human.name} size="small" onClick={() => history.push('/folio/user/'+human.email)}>
                 <div>{human.email}</div>
             </Card>
         );
