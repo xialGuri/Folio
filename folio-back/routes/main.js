@@ -4,6 +4,7 @@ const router = express.Router();
 const { Writing } = require('../models/Writing');
 const { User } = require('../models/User');
 const { Folio } = require('../models/Folio');
+const { Follow } = require('../models/Follow');
 
 // 사용자 검색
 router.post('/search', (req, res) => {
@@ -30,26 +31,67 @@ router.post('/search', (req, res) => {
 router.post('/writing', (req, res) => {
     const email = req.body.email;
 
-    // 1. 내 이메일 기반 팔로워 목록 찾기
-    // 2. 팔로워 목록의 글 불러오기
-    // 3. 내 글과 묶어서 반환
-
-    // 일단 임시로 내가 쓴 글만 불러와서 반환하도록 만듦
-    Writing.find({ email: email }, (err, writings) => {
-        if (err) {
-            console.log(err);
-            return res.json({
-                success: false,
-                err,
-            });
-        }
-
-        return res.json({
-            success: true,
-            writings,
+    const promise = new Promise((resolve, reject) => {
+        let followers = []
+        
+        // 1. 내 이메일 기반 팔로워 목록 찾기
+        Follow.find({ myEmail: email }, (err, people) => {
+            if (err) {
+                console.log(err);
+                return res.json({
+                    success: false,
+                    err,
+                });
+            }
+            followers = people;
         });
-    });
+        setTimeout(() => resolve(followers), 200);
+    })
+        .then(async value => {
+            // 2. 팔로우 목록의 이메일과 내 이메일을 합쳐서 새로운 배열 생성
+            const emails = makeEmailArr(value, email);
+            console.log(emails);
+            
+            // 3. 목록의 글 불러오기
+            const promise = new Promise((resolve, reject) => {
+                let allWritings = []
+                
+                emails.map(email => {
+                    Writing.find({ email: email }, (err, writings) => {
+                        if (err) {
+                            console.log(err);
+                            return res.json({
+                                success: false,
+                                err,
+                            });
+                        }
+                        
+                        allWritings = allWritings.concat(writings);
+                    });
+                });
+                setTimeout(() => resolve(allWritings), 300);
+            })
+                .then(value2 => {
+                    console.log(value2);
+                    return res.json({
+                        success: true,
+                        writings: value2,
+                    })
+                });
+        });
 });
+
+// 이메일만 뽑아내서 배열 만드는 함수
+const makeEmailArr = (followers, myEmail) => {
+    const rtn = [myEmail];
+
+    followers.map(follower => {
+        console.log(follower.userEmail);
+        rtn.push(follower.userEmail);
+    });
+
+    return rtn;
+};
 
 // 특정 사용자의 글만 찾기
 router.post('/writing/user', (req, res) => {
