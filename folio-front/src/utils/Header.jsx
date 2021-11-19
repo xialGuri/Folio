@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Input, Button } from "antd";
 import { CommentOutlined, UserOutlined, CodeOutlined, LoginOutlined, LogoutOutlined } from '@ant-design/icons';
 import { BACK_ADDRESS } from "./BackAddress";
@@ -11,7 +11,7 @@ import { Card } from 'react-bootstrap';
 
 const { Search } = Input;
 
-const Header = () => {
+const Header = ({ history }) => {
     // 회원가입
     const [signUpModalOn, setSignUpModalOn] = useState(false);
     // 로그인
@@ -24,7 +24,7 @@ const Header = () => {
         setSearchText(e.target.value);
     };
 
-    const onSearch = () => {
+    const onSearch = (e) => {
         const body = {
             searchText: searchText,
         };
@@ -34,6 +34,7 @@ const Header = () => {
                 if (res.data.success) {
                     console.log('검색 성공');
                     console.log(res.data.userInfo);
+                    history.push('/folio/search?name='+e)
                 } else {
                     alert("검색 실패");
                 }
@@ -112,4 +113,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default withRouter(Header);

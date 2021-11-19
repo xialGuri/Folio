@@ -63,6 +63,12 @@ const MyPage = ({ history }) => {
         }
     ];
 
+    const renderStacks = stacks.map((stack, idx) => {
+            return (
+                <span key={idx}> {stack}</span>
+            );
+    });
+
     return (
         <>
         <center className="background">
@@ -121,7 +127,7 @@ const MyPage = ({ history }) => {
                     <Card.Title style={{fontWeight:'bold', marginRight:'800px'}}>내 기술 / 스택</Card.Title>
                     <br/>
                     <Card.Text style={{float: 'left'}}>
-                    {stacks}
+                    {renderStacks}
                     </Card.Text>
                 </Card.Body>
             </Card>

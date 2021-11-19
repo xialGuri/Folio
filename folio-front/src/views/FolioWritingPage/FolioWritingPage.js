@@ -97,7 +97,7 @@ const FolioWritingPage = ({ history }) => {
         if (stacks.includes(stackTmp)) {
             return alert('이미 추가 되어 있는 기술 스택입니다.');
         }
-        setStacks([...stacks, stackTmp + ' ']);
+        setStacks([...stacks, stackTmp]);
         setStackTmp("");
     };
 

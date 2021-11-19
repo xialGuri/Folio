@@ -183,7 +183,7 @@ const MainPage = ({ history }) => {
                     <br />
                 </WritingAreaNoLogin>
             }
-            <Footer></Footer>
+            <Footer/>
         </center>
     );
 };
