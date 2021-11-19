@@ -34,7 +34,7 @@ const Header = ({ history }) => {
                 if (res.data.success) {
                     console.log('검색 성공');
                     console.log(res.data.userInfo);
-                    history.push('/folio/search?name='+e)
+                    history.push('/folio/search/'+ e)
                 } else {
                     alert("검색 실패");
                 }
@@ -100,14 +100,28 @@ const Header = ({ history }) => {
                 <Link to="/"><CodeOutlined style={logoStyle} /></Link>
 
                 {/* 검색어 입력 */}
-                <Search
+                {/* 로그인 기록이 없는 경우 검색 동작하지 않음*/}
+                {userData === null &&
+                    <Search
+                    value={searchText}
+                    onChange={onChangeSearch}
+                    placeholder="검색어를 입력하세요"
+                    onSearch={()=> alert('로그인 해주세요.')}
+                    style={searchStyle}
+                    enterButton>
+                    </Search>
+                }
+                {/* 로그인 기록이 있는 경우 검색 동작*/}
+                {userData !== null &&
+                    <Search
                     value={searchText}
                     onChange={onChangeSearch}
                     placeholder="검색어를 입력하세요"
                     onSearch={onSearch}
                     style={searchStyle}
-                    enterButton
-                ></Search>
+                    enterButton>
+                    </Search>
+                }
             </center>
         </>
     );

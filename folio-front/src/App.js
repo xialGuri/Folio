@@ -22,7 +22,7 @@ function App() {
             <Route path='/folio/me' exact component={MyPage} />
             <Route path='/folio/user/:userEmail' exact component={UserPage} />
             <Route path='/folio/user/writing/:userEmail' exact component={FollowerWritingPage} />
-            <Route path='/folio/search' exact component={SearchPage} />
+            <Route path='/folio/search/:userName' exact component={SearchPage} />
           </Switch>
         </Router>
       </Provider>

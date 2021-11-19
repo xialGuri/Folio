@@ -9,9 +9,42 @@ import { Card } from 'react-bootstrap';
 import { VscAccount } from 'react-icons/vsc';
 import { Button } from "antd";
 
-const SearchPage = ({ history }) => {
+const SearchPage = ({ history, match }) => {
+    const user = match.params.userName;
+    const [searchText, setSearchText] = useState('');
+    const [searchPeople, setsearchPeople] = useState([]);
+    useEffect(() => {
+        const body = {
+            searchText: user,
+        };
+        axios.post(BACK_ADDRESS + '/main/search', body)
+            .then(res => {
+                if (res.data.success) {
+                    console.log(res.data.userInfo)
+                    setsearchPeople(res.data.userInfo)
+                } else {
+                    alert('검색 실패');
+                }
+            });
+    }, []);
 
-  
+    const renderPeople = searchPeople.map((human, idx) => {
+        return (   
+            <Card.Body style = {{width:'40rem', margin: 'auto'}} key={idx}>
+            <Card.Header>
+                <Card.Title style={{ fontWeight:'bold' }}> 
+                    <p style={{ marginBottom:'10px' ,fontSize: '25px', fontWeight: 'bold'}}>
+                        <VscAccount size='30'/> {human.name}
+                    </p> 
+                </Card.Title>
+            </Card.Header>
+            <Card.Text>
+                {human.email}
+            </Card.Text>
+        </Card.Body>
+        );
+    });
+
     return (
         <>
         <center className="background">
@@ -22,33 +55,8 @@ const SearchPage = ({ history }) => {
                     사용자 목록
                 </p>
             </Card.Header>
-            
-            <Card.Body style = {{width:'40rem', margin: 'auto'}}>
-                <Card.Header>
-                    <Card.Title style={{ fontWeight:'bold' }}> 
-                        <p style={{ marginBottom:'10px' ,fontSize: '25px', fontWeight: 'bold'}}>
-                            <VscAccount size='30'/> 나동현
-                        </p> 
-                    </Card.Title>
-                </Card.Header>
-                <Card.Text>
-                    (1@naver.com)
-                </Card.Text>
-            </Card.Body>
 
-            <Card.Body style = {{width:'40rem', margin: 'auto'}}>
-                <Card.Header>
-                    <Card.Title style={{ fontWeight:'bold' }}> 
-                        <p style={{ marginBottom:'10px' ,fontSize: '25px', fontWeight: 'bold'}}>
-                            <VscAccount size='30'/> 나동현
-                        </p> 
-                    </Card.Title>
-                </Card.Header>
-                <Card.Text>
-                    (1@naver.com)
-                </Card.Text>
-            </Card.Body>
-
+            {renderPeople}
         </Card>
         <Card style={{ width: '60rem', marginTop: '10px'}}>
             <Card.Body>
