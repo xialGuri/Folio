@@ -151,4 +151,59 @@ router.post('/follow', (req, res) => {
     });
 });
 
+// 팔로워 목록 가져오기
+router.post('/follower', (req, res) => {
+    const { email } = req.body;
+
+    const promise = new Promise((resolve, reject) => {
+        let rtn = [];
+        Follow.find({ myEmail: email }, (err, people) => {
+            if (err) {
+                console.log(err);
+                return res.json({
+                    success: false,
+                    err,
+                });
+            }
+            rtn = searchUserInfo(people);
+        });
+        setTimeout(() => resolve(rtn), 500);
+    })
+        .then(value => {
+            return res.json({
+                success: true,
+                people: value,
+            });
+        });
+});
+
+// 이메일로 사용자 정보 검색하기
+const searchUserInfo = async (followers) => {
+    let rtn = [];
+
+    const promise = await new Promise((resolve, reject) => {
+        const users = [];
+
+        followers.forEach(async follower => {
+            User.findOne({ email: follower.userEmail }, async (err, user) => {
+                if (err) {
+                    console.log(err);
+                    return res.json({
+                        success: false,
+                        err,
+                    });
+                }
+    
+                await users.push(user);
+            });
+        });
+        setTimeout(() => resolve(users), 100);
+    })
+        .then(value => {
+            rtn = value;
+        });
+
+    return await rtn;
+};
+
 module.exports = router;
