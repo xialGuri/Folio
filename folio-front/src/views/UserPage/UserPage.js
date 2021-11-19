@@ -120,7 +120,7 @@ const UserPage = ({ history, match }) => {
             <Card.Header>
                 <Nav variant="tabs" defaultActiveKey="#first">
                 <Nav.Item>
-                    <Nav.Link href="#first" onClick={() => history.push('/folio/user' + userEmail)}>포트폴리오</Nav.Link>
+                    <Nav.Link href="#first" onClick={() => history.push('/folio/user/' + userEmail)}>포트폴리오</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                     <Nav.Link href="#second" onClick={() => history.push('/folio/user/writing/' + userEmail)}>게시글</Nav.Link>
