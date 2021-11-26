@@ -102,72 +102,83 @@ const MyPage = ({ history }) => {
         <center className="background">
             <Header style={{ margin: 'auto', width: '100%' }}></Header>
             <div>
-            <Button 
-                style={{marginTop:'30px', marginBottom: '30px', width:'1000px'}} 
-                variant='outline-light'
-                size='lg'
-                onClick={() => history.push('/folio/writing')}
-            >
-                포트폴리오 작성하기
-            </Button> 
+            
             </div>   
-            <Card style={{ width: '15rem', marginTop: '0px',float:'left', marginLeft:'20px',marginRight:'31px' }} text='black'>
-                <Card.Header style={{marginBottom:'0px', fontSize:'25px' }}>
-                    팔로워 목록
-                </Card.Header>
-                <Card.Body>
-                    {renderFollowers}
-                </Card.Body>
-            </Card>
-            <Card style={{ width: '50rem', marginTop: '0px', marginRight:'350px' }} text='black'>
-                <Card.Img variant="top" src={profileBackground} />
-                <Card.Header style={{marginBottom:'0px' }}>
-                    <p style={{ marginBottom:'10px' ,fontSize: '25px', fontWeight: 'bold'}}>
-                    <VscAccount size='30'/> {userData.name}</p>
-                    <Card.Subtitle style = {{fontSize:'20px'}} className="mb-2 text-muted">({userData.email})</Card.Subtitle>
-                </Card.Header>
-                <Card.Body>
-                    <Card.Title style={{fontWeight:'bold', marginRight:'880px'}}>내 소개</Card.Title>
-                    <br/>
-                    <Card.Text style={{float:'left'}}>
-                    <ReactMarkdown children={intro} />
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-            <Card style={{ width: '50rem', marginTop: '10px' }} text='black'>
-                <Card.Body>
-                    <Card.Title style={{fontWeight:'bold', marginRight:'800px'}}>내 기술 / 스택</Card.Title>
-                    <br/>
-                    <Card.Text style={{float: 'left'}}>
-                    {renderStacks}
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-            <Card style={{ width: '50rem', marginTop: '10px' }} text='black'>
-                <Card.Body>
-                    <Card.Title style={{fontWeight:'bold', marginRight:'850px'}}>경력 사항</Card.Title>
-                    <br/>
-                    <Table columns={columns} dataSource={workData} />
-                </Card.Body>
-            </Card>
-            <Card style={{ width: '50rem', marginTop: '10px' }} text='black'>
-                <Card.Body>
-                    <Card.Title style={{fontWeight:'bold', marginRight:'840px'}}>내 깃 허브</Card.Title>
-                    <br/>
-                    <Card.Text style={{float:'left'}}>
-                    <a target="_blank" href={githubLink}>Go to my GitHub</a>
-                    <Link to = {githubLink} />
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-            <Card style={{ width: '50rem', marginTop: '10px' }} text='black'>
-                <Card.Body>
-                    <Card.Link href="/">Logout</Card.Link>
-                    <Link to="/" style={{marginLeft:'10px'}}>Main</Link>
-                </Card.Body>
-            </Card>
+            <div>
+                <div>
+                    <Card style={{ width: '15rem', marginTop: '30px',float:'left', marginLeft:'20px',marginRight:'31px' }} text='black'>
+                        <Card.Header style={{marginBottom:'0px', fontSize:'25px' }}>
+                            팔로워 목록
+                        </Card.Header>
+                        <Card.Body>
+                            {renderFollowers}
+                        </Card.Body>
+                    </Card>
+                </div>
+                <Button 
+                    style={{marginTop:'30px', marginBottom: '30px', width:'50rem'}} 
+                    variant='outline-light'
+                    size='lg'
+                    onClick={() => history.push('/folio/writing')}
+                >
+                    포트폴리오 작성하기
+                </Button> 
+                <div>
+                    <Card style={{ width: '50rem', marginTop: '0px' }} text='black'>
+                        <Card.Img variant="top" src={profileBackground} />
+                        <Card.Header style={{marginBottom:'0px' }}>
+                            <p style={{ marginBottom:'10px' ,fontSize: '25px', fontWeight: 'bold'}}>
+                            <VscAccount size='30'/> {userData.name}</p>
+                            <Card.Subtitle style = {{fontSize:'20px'}} className="mb-2 text-muted">({userData.email})</Card.Subtitle>
+                        </Card.Header>
+                        <Card.Body>
+                            <Card.Title style={{fontWeight:'bold', marginRight:'880px'}}>내 소개</Card.Title>
+                            <br/>
+                            <Card.Text style={{float:'left'}}>
+                            <ReactMarkdown children={intro} />
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <div style={{ width: '15rem', marginTop: '30px',float:'left', marginLeft:'20px',marginRight:'31px' }}></div>
+                    <Card style={{ width: '50rem', marginTop: '10px' }} text='black'>
+                        <Card.Body>
+                            <Card.Title style={{fontWeight:'bold', marginRight:'800px'}}>내 기술 / 스택</Card.Title>
+                            <br/>
+                            <Card.Text style={{float: 'left'}}>
+                            {renderStacks}
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <div style={{ width: '15rem', marginTop: '30px',float:'left', marginLeft:'20px',marginRight:'31px' }}></div>
+                    <Card style={{ width: '50rem', marginTop: '10px' }} text='black'>
+                        <Card.Body>
+                            <Card.Title style={{fontWeight:'bold', marginRight:'850px'}}>경력 사항</Card.Title>
+                            <br/>
+                            <Table columns={columns} dataSource={workData} />
+                        </Card.Body>
+                    </Card>
+                    <div style={{ width: '15rem', marginTop: '30px',float:'left', marginLeft:'20px',marginRight:'31px' }}></div>
+                    <Card style={{ width: '50rem', marginTop: '10px' }} text='black'>
+                        <Card.Body>
+                            <Card.Title style={{fontWeight:'bold', marginRight:'840px'}}>내 깃 허브</Card.Title>
+                            <br/>
+                            <Card.Text style={{float:'left'}}>
+                            <a target="_blank" href={githubLink}>Go to my GitHub</a>
+                            <Link to = {githubLink} />
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <div style={{ width: '15rem', marginTop: '30px',float:'left', marginLeft:'20px',marginRight:'31px' }}></div>
+                    <Card style={{ width: '50rem', marginTop: '10px' }} text='black'>
+                        <Card.Body>
+                            <Card.Link href="/">Logout</Card.Link>
+                            <Link to="/" style={{marginLeft:'10px'}}>Main</Link>
+                        </Card.Body>
+                    </Card>
+                </div>
+            </div>
             <Footer/>
-            </center>
+        </center>
         </>
     )
 };
