@@ -1,4 +1,4 @@
-### 사용 폰트
+### Font in Use
 
 [고운돋움](https://fonts.google.com/specimen/Gowun+Dodum?subset=korean#standard-styles)
 
